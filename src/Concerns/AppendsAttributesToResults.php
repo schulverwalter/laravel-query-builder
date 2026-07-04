@@ -10,9 +10,9 @@ trait AppendsAttributesToResults
 {
     protected Collection $allowedAppends;
 
-    public function allowedAppends(string ...$appends): static
+    public function allowedAppends(string|array ...$appends): static
     {
-        $this->allowedAppends = collect($appends);
+        $this->allowedAppends = collect($appends)->flatten();
 
         $this->ensureAllAppendsExist();
 

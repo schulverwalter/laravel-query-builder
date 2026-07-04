@@ -12,9 +12,9 @@ trait AddsIncludesToQuery
 {
     protected ?Collection $allowedIncludes = null;
 
-    public function allowedIncludes(AllowedInclude|string ...$includes): static
+    public function allowedIncludes(AllowedInclude|string|array ...$includes): static
     {
-        $this->allowedIncludes = collect($includes)
+        $this->allowedIncludes = collect($includes)->flatten()
             ->reject(fn ($include) => empty($include))
             ->flatMap(function ($include): array {
                 if ($include instanceof AllowedInclude) {

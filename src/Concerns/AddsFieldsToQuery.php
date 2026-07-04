@@ -11,9 +11,9 @@ trait AddsFieldsToQuery
 {
     protected ?Collection $allowedFields = null;
 
-    public function allowedFields(string ...$fields): static
+    public function allowedFields(string|array ...$fields): static
     {
-        $this->allowedFields = collect($fields)
+        $this->allowedFields = collect($fields)->flatten()
             ->map(function (string $fieldName) {
                 return $this->prependField($fieldName);
             });

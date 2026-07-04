@@ -10,9 +10,9 @@ trait FiltersQuery
 {
     protected Collection $allowedFilters;
 
-    public function allowedFilters(AllowedFilter|string ...$filters): static
+    public function allowedFilters(AllowedFilter|string|array ...$filters): static
     {
-        $this->allowedFilters = collect($filters)->map(function ($filter) {
+        $this->allowedFilters = collect($filters)->flatten()->map(function ($filter) {
             if ($filter instanceof AllowedFilter) {
                 return $filter;
             }

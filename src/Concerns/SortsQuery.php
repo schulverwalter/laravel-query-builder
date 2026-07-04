@@ -10,9 +10,9 @@ trait SortsQuery
 {
     protected Collection $allowedSorts;
 
-    public function allowedSorts(AllowedSort|string ...$sorts): static
+    public function allowedSorts(AllowedSort|string|array ...$sorts): static
     {
-        $this->allowedSorts = collect($sorts)->map(function ($sort) {
+        $this->allowedSorts = collect($sorts)->flatten()->map(function ($sort) {
             if ($sort instanceof AllowedSort) {
                 return $sort;
             }
@@ -27,12 +27,12 @@ trait SortsQuery
         return $this;
     }
 
-    public function defaultSort(AllowedSort|string ...$sorts): static
+    public function defaultSort(AllowedSort|string|array ...$sorts): static
     {
         return $this->defaultSorts(...$sorts);
     }
 
-    public function defaultSorts(AllowedSort|string ...$sorts): static
+    public function defaultSorts(AllowedSort|string|array ...$sorts): static
     {
         if ($this->request->sorts()->isNotEmpty()) {
             return $this;
