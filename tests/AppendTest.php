@@ -35,7 +35,7 @@ it('can append attributes to a collection of models', function () {
 
 it('can append multiple attributes', function () {
     $models = createQueryFromAppendRequest('fullname,reversename')
-        ->allowedAppends(['fullname', 'reversename'])
+        ->allowedAppends('fullname', 'reversename')
         ->get();
 
     $models->each(function ($model) {
@@ -76,7 +76,7 @@ it('can allow appends by passing multiple arguments', function () {
 
 it('does not append attributes that were not requested', function () {
     $model = createQueryFromAppendRequest('fullname')
-        ->allowedAppends(['fullname', 'reversename'])
+        ->allowedAppends('fullname', 'reversename')
         ->first();
 
     expect($model->toArray())
