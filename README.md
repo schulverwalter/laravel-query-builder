@@ -106,6 +106,11 @@ $users = QueryBuilder::for(User::class)
 
 [Read more about selecting fields.](https://spatie.be/docs/laravel-query-builder/v7/features/selecting-fields/)
 
+## Fork-specific features
+
+> This is a fork of [`spatie/laravel-query-builder`](https://github.com/spatie/laravel-query-builder).
+> The features below are additions maintained on top of the upstream package.
+
 ### Appending attributes to results: `/users?append=full_name`
 
 ```php
@@ -128,11 +133,6 @@ $users = QueryBuilder::for(User::class)
 
 Requesting an attribute that is not listed in `allowedAppends()` throws an
 `InvalidAppendQuery` exception.
-
-## Fork-specific features
-
-> This is a fork of [`spatie/laravel-query-builder`](https://github.com/spatie/laravel-query-builder).
-> The features below are additions maintained on top of the upstream package.
 
 ### Globally allowed filters
 
