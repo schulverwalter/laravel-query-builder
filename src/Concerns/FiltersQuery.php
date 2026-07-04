@@ -62,7 +62,9 @@ trait FiltersQuery
 
         $filterNames = $this->request->filters()->keys();
 
-        $allowedFilterNames = $this->allowedFilters->map(fn (AllowedFilter $allowedFilter) => $allowedFilter->getName());
+        $allowedFilterNames = $this->allowedFilters
+            ->map(fn (AllowedFilter $allowedFilter) => $allowedFilter->getName())
+            ->merge(config('query-builder.global_filters', []));
 
         $diff = $filterNames->diff($allowedFilterNames);
 

@@ -3,13 +3,18 @@
 namespace Spatie\QueryBuilder;
 
 use ArrayAccess;
+use Illuminate\Contracts\Pagination\CursorPaginator;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Traits\ForwardsCalls;
 use Spatie\QueryBuilder\Concerns\AddsFieldsToQuery;
 use Spatie\QueryBuilder\Concerns\AddsIncludesToQuery;
+use Spatie\QueryBuilder\Concerns\AppendsAttributesToResults;
 use Spatie\QueryBuilder\Concerns\FiltersQuery;
 use Spatie\QueryBuilder\Concerns\SortsQuery;
 
@@ -22,6 +27,7 @@ class QueryBuilder implements ArrayAccess
 {
     use AddsFieldsToQuery;
     use AddsIncludesToQuery;
+    use AppendsAttributesToResults;
     use FiltersQuery;
     use ForwardsCalls;
     use SortsQuery;
@@ -84,11 +90,40 @@ class QueryBuilder implements ArrayAccess
     {
         $result = $this->forwardCallTo($this->subject, $name, $arguments);
 
+        /*
+         * If the forwarded method call is part of a chain we can return $this
+         * instead of the actual $result to keep the chain going.
+         */
         if ($result === $this->subject) {
             return $this;
         }
 
+        $this->addAppendsToResult($result);
+
         return $result;
+    }
+
+    protected function addAppendsToResult(mixed $result): void
+    {
+        if ($this->request->appends()->isEmpty()) {
+            return;
+        }
+
+        if ($result instanceof Model) {
+            $this->addAppendsToResults(new Collection([$result]));
+
+            return;
+        }
+
+        if ($result instanceof Collection) {
+            $this->addAppendsToResults($result);
+
+            return;
+        }
+
+        if ($result instanceof LengthAwarePaginator || $result instanceof Paginator || $result instanceof CursorPaginator) {
+            $this->addAppendsToResults(new Collection($result->items()));
+        }
     }
 
     public function clone(): static

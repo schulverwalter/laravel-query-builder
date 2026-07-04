@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\QueryBuilder\Tests\TestCase;
+use Spatie\QueryBuilder\Tests\TestClasses\Models\AppendModel;
 use Spatie\QueryBuilder\Tests\TestClasses\Models\TestModel;
 
 uses(TestCase::class)->in(__DIR__);
@@ -14,6 +15,17 @@ function createQueryFromFilterRequest(array $filters, ?string $model = null): Qu
 
     $request = new Request([
         'filter' => $filters,
+    ]);
+
+    return QueryBuilder::for($model, $request);
+}
+
+function createQueryFromAppendRequest(array|string $appends, ?string $model = null): QueryBuilder
+{
+    $model ??= AppendModel::class;
+
+    $request = new Request([
+        'append' => $appends,
     ]);
 
     return QueryBuilder::for($model, $request);
