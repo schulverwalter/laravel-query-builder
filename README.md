@@ -127,7 +127,7 @@ attributes can be requested at once:
 ```php
 // /users?append=full_name,reverse_name
 $users = QueryBuilder::for(User::class)
-    ->allowedAppends(['full_name', 'reverse_name'])
+    ->allowedAppends('full_name', 'reverse_name')
     ->paginate();
 ```
 

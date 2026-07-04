@@ -10,10 +10,8 @@ trait AppendsAttributesToResults
 {
     protected Collection $allowedAppends;
 
-    public function allowedAppends($appends): static
+    public function allowedAppends(string ...$appends): static
     {
-        $appends = is_array($appends) ? $appends : func_get_args();
-
         $this->allowedAppends = collect($appends);
 
         $this->ensureAllAppendsExist();
