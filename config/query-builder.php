@@ -47,6 +47,16 @@ return [
     'disable_invalid_filter_query_exception' => false,
 
     /*
+     * Filters listed here are always considered allowed, in addition to the ones passed to
+     * `allowedFilters()` on each query. This is useful for filters that are handled globally
+     * (for example in middleware or a base scope) and should never trigger an
+     * `InvalidFilterQuery` exception.
+     *
+     * For example: ['locale', 'tenant']
+     */
+    'global_filters' => [],
+
+    /*
      * By default the package will throw an `InvalidSortQuery` exception when a sort in the
      * URL is not allowed in the `allowedSorts()` method.
      */

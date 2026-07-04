@@ -106,6 +106,56 @@ $users = QueryBuilder::for(User::class)
 
 [Read more about selecting fields.](https://spatie.be/docs/laravel-query-builder/v7/features/selecting-fields/)
 
+### Appending attributes to results: `/users?append=full_name`
+
+```php
+$users = QueryBuilder::for(User::class)
+    ->allowedAppends('full_name')
+    ->get();
+
+// every `User` in the result will have its `full_name` accessor appended
+```
+
+The `append` parameter also works on a single model and on paginated results, and multiple
+attributes can be requested at once:
+
+```php
+// /users?append=full_name,reverse_name
+$users = QueryBuilder::for(User::class)
+    ->allowedAppends(['full_name', 'reverse_name'])
+    ->paginate();
+```
+
+Requesting an attribute that is not listed in `allowedAppends()` throws an
+`InvalidAppendQuery` exception.
+
+## Fork-specific features
+
+> This is a fork of [`spatie/laravel-query-builder`](https://github.com/spatie/laravel-query-builder).
+> The features below are additions maintained on top of the upstream package.
+
+### Globally allowed filters
+
+Some filters are handled outside of an individual query — for example in middleware, a global
+scope, or a base repository — and should never trigger an `InvalidFilterQuery` exception, even
+though they are not passed to `allowedFilters()` on every query. List those filter names under
+`global_filters` in `config/query-builder.php`:
+
+```php
+// config/query-builder.php
+'global_filters' => ['locale', 'tenant'],
+```
+
+```php
+// /users?filter[name]=John&filter[locale]=en
+$users = QueryBuilder::for(User::class)
+    ->allowedFilters('name') // `locale` is allowed globally, no need to repeat it here
+    ->get();
+```
+
+The names configured in `global_filters` are always merged into the allowed filters of every
+`QueryBuilder`, in addition to the filters passed to `allowedFilters()`.
+
 ## Support us
 
 [<img src="https://github-ads.s3.eu-central-1.amazonaws.com/laravel-query-builder.jpg?t=1" width="419px" />](https://spatie.be/github-ad-click/laravel-query-builder)

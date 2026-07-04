@@ -535,6 +535,24 @@ it('does not throw invalid filter exception when disable in config', function ()
     expect(true)->toBeTrue();
 });
 
+it('does not throw invalid filter exception for globally allowed filters', function () {
+    config(['query-builder.global_filters' => ['name']]);
+
+    createQueryFromFilterRequest(['name' => 'John'])
+        ->allowedFilters('id');
+
+    expect(true)->toBeTrue();
+});
+
+it('still guards against invalid filters that are not globally allowed', function () {
+    config(['query-builder.global_filters' => ['name']]);
+
+    $this->expectException(InvalidFilterQuery::class);
+
+    createQueryFromFilterRequest(['unknown' => 'value'])
+        ->allowedFilters('id');
+});
+
 it('can create a custom filter with an instantiated filter', function () {
     $customFilter = new class('test1') implements CustomFilter
     {
