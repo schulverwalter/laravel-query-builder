@@ -11,6 +11,11 @@ class NestedRelatedModel extends Model
 
     public $timestamps = false;
 
+    public function getReversedNameAttribute(): string
+    {
+        return strrev($this->name);
+    }
+
     public function relatedModel(): BelongsTo
     {
         return $this->belongsTo(RelatedModel::class);

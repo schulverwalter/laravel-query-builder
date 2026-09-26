@@ -134,6 +134,19 @@ $users = QueryBuilder::for(User::class)
 Requesting an attribute that is not listed in `allowedAppends()` throws an
 `InvalidAppendQuery` exception.
 
+Like includes, appends take dot notation to reach the models of an included relation. A
+relation that was not included is not loaded for an append:
+
+```php
+// /users?include=posts&append=posts.excerpt
+$users = QueryBuilder::for(User::class)
+    ->allowedIncludes('posts')
+    ->allowedAppends('posts.excerpt')
+    ->get();
+
+// every loaded `Post` has its `excerpt` accessor appended, the `User` models do not
+```
+
 ### Globally allowed filters
 
 Some filters are handled outside of an individual query — for example in middleware, a global
