@@ -23,6 +23,11 @@ class RelatedModel extends Model
         return $this->hasMany(NestedRelatedModel::class);
     }
 
+    public function getReversedNameAttribute(): string
+    {
+        return strrev($this->name);
+    }
+
     public function scopeNamed(Builder $query, string $name): Builder
     {
         return $query->where('name', $name);
